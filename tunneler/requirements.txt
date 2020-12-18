@@ -1,0 +1,2 @@
+websockets==8.1
+git+https://github.com/Razikus/webssh.git@master
