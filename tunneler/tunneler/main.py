@@ -22,6 +22,7 @@ async def main():
         server  = await ic.initialise()
         await server.start_serving()
         sys.argv.append(f"--port={allocatePort}")
+        sys.argv.append(f"--timeout=60")
         websshmain()
 
 asyncio.get_event_loop().run_until_complete(main())
