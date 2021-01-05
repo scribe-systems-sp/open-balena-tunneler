@@ -25,7 +25,19 @@ jobs:
           context: ./api/
           file: ./api/Dockerfile.template
           push: true
-          tags: razikus/open-balena-tunneler:latest
+          tags: razikus/open-balena-tunneler:api-latest
+          build-args: |
+            BALENA_MACHINE_NAME=qemux86-64
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Build and push tunneler
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./tunneler/
+          file: ./tunneler/Dockerfile.template
+          push: true
+          tags: razikus/open-balena-tunneler:tunneler-latest
           build-args: |
             BALENA_MACHINE_NAME=qemux86-64
       - name: Image digest
