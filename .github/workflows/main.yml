@@ -31,7 +31,7 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Build and push tunneler
-        id: docker_build
+        id: docker_build_tunneler
         uses: docker/build-push-action@v2
         with:
           context: ./tunneler/
