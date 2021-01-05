@@ -6,6 +6,8 @@ services:
     command: 
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.email=your-email@example.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
