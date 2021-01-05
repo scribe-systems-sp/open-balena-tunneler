@@ -109,7 +109,7 @@ async def createTraefikSSHConnection(token, deviceUUID, domainName, port, traefi
         "remotePort": str(port),
         "forwarderType": "SSHTRAEFIK",
         "domainName": domainName,
-        "traefik.enable=true",
+        "traefik.enable": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         "uuid": uuid4
     }
@@ -138,7 +138,7 @@ async def createTraefikConnection(token, deviceUUID, domainName, port, traefikNe
         "forwarderType": "TRAEFIK",
         "domainName": domainName,
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
-        "traefik.enable=true",
+        "traefik.enable": "true",
         "uuid": uuid4
     }
     client.containers.run(
@@ -165,7 +165,7 @@ async def createTraefikSSLConnection(token, deviceUUID, domainName, port, traefi
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
-        "traefik.enable=true",
+        "traefik.enable": "true",
         "uuid": uuid4,
     }
     client.containers.run(
@@ -189,7 +189,7 @@ async def createTraefikSSHSSLConnection(token, deviceUUID, domainName, port, tra
         "remotePort": str(port),
         "forwarderType": "SSHSSLTRAEFIK",
         "domainName": domainName,
-        "traefik.enable=true",
+        "traefik.enable": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
