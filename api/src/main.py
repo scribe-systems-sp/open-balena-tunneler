@@ -58,7 +58,7 @@ async def createTCPConnection(token, deviceUUID, port, allocatePort, labels):
         "uuid": uuid4
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "TCP"},
@@ -84,7 +84,7 @@ async def createSSHConnection(token, deviceUUID, port, allocatePort, labels):
         "uuid": uuid4
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "SSH"},
@@ -114,7 +114,7 @@ async def createTraefikSSHConnection(token, deviceUUID, domainName, port, traefi
         "uuid": uuid4
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "SSH"},
@@ -142,7 +142,7 @@ async def createTraefikConnection(token, deviceUUID, domainName, port, traefikNe
         "uuid": uuid4
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "TCP"},
@@ -169,7 +169,7 @@ async def createTraefikSSLConnection(token, deviceUUID, domainName, port, traefi
         "uuid": uuid4,
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "TCP"},
@@ -197,7 +197,7 @@ async def createTraefikSSHSSLConnection(token, deviceUUID, domainName, port, tra
         "uuid": uuid4
     }
     client.containers.run(
-        "tunneler",
+        imageName,
         detach=True,
         environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
                      "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "SSH"},
