@@ -193,7 +193,6 @@ async def createTraefikSSHSSLConnection(token, deviceUUID, domainName, port, tra
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
-        "traefik.enable=true",
         "uuid": uuid4
     }
     client.containers.run(
