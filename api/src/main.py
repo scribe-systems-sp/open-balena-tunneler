@@ -109,6 +109,7 @@ async def createTraefikSSHConnection(token, deviceUUID, domainName, port, traefi
         "remotePort": str(port),
         "forwarderType": "SSHTRAEFIK",
         "domainName": domainName,
+        "traefik.enable=true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         "uuid": uuid4
     }
@@ -137,6 +138,7 @@ async def createTraefikConnection(token, deviceUUID, domainName, port, traefikNe
         "forwarderType": "TRAEFIK",
         "domainName": domainName,
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
+        "traefik.enable=true",
         "uuid": uuid4
     }
     client.containers.run(
@@ -150,6 +152,60 @@ async def createTraefikConnection(token, deviceUUID, domainName, port, traefikNe
         name=f"TRAEFIK.{deviceUUID}.{port}.{domainName}.{shortUUID}"
     )
 
+async def createTraefikSSLConnection(token, deviceUUID, domainName, port, traefikNetwork, labels):
+    uuid4 = str(uuid.uuid4())
+    shortUUID = uuid4[0:8]
+    client = docker.from_env()
+    mainlabels = {
+        "belongsTo": "OpenBalenaForwarder",
+        "deviceUUID": deviceUUID,
+        "remotePort": str(port),
+        "forwarderType": "SSLTRAEFIK",
+        "domainName": domainName,
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
+        "traefik.enable=true",
+        "uuid": uuid4,
+    }
+    client.containers.run(
+        "tunneler",
+        detach=True,
+        environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
+                     "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "TCP"},
+        restart_policy={"Name": "always"},
+        network=traefikNetwork,
+        labels={**labels, **mainlabels},
+        name=f"SSLTRAEFIK.{deviceUUID}.{port}.{domainName}.{shortUUID}"
+    )
+
+async def createTraefikSSHSSLConnection(token, deviceUUID, domainName, port, traefikNetwork, labels):
+    uuid4 = str(uuid.uuid4())
+    shortUUID = uuid4[0:8]
+    client = docker.from_env()
+    mainlabels = {
+        "belongsTo": "OpenBalenaForwarder",
+        "deviceUUID": deviceUUID,
+        "remotePort": str(port),
+        "forwarderType": "SSHSSLTRAEFIK",
+        "domainName": domainName,
+        "traefik.enable=true",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
+        "traefik.enable=true",
+        "uuid": uuid4
+    }
+    client.containers.run(
+        "tunneler",
+        detach=True,
+        environment={"TOKEN": token, "DEVICEUUID": deviceUUID, "REMOTEPORT": port,
+                     "OPENBALENA": openBalena, "ALLOCATE": 9999, "CONNECTIONTYPE": "SSH"},
+        restart_policy={"Name": "always"},
+        network=traefikNetwork,
+        labels={**labels, **mainlabels},
+        name=f"SSHSSLTRAEFIK.{deviceUUID}.{port}.{domainName}.{shortUUID}"
+    )
 
 class RequestConnection(BaseModel):
     deviceUUID: str
@@ -202,6 +258,10 @@ async def requestConnection(req: RequestConnection, token=Depends(isTokenOk)):
         useXIP = req.additionalSettings.get("useXIP", False)
         traefikNetwork = req.additionalSettings.get("traefikNetwork", "web")
         await createTraefikConnection(token, req.deviceUUID, domainName, req.remotePort, traefikNetwork, useXIP, req.additionalLabels)
+    elif(req.forwarderType == "SSLTRAEFIK"):
+        domainName = req.additionalSettings.get("domainName", None)
+        traefikNetwork = req.additionalSettings.get("traefikNetwork", "web")
+        await createTraefikSSLConnection(token, req.deviceUUID, domainName, req.remotePort, traefikNetwork, req.additionalLabels)
     elif(req.forwarderType == "SSH"):
         if(req.localPort == None):
             raise HTTPException(422, "Pass localPort")
@@ -211,6 +271,10 @@ async def requestConnection(req: RequestConnection, token=Depends(isTokenOk)):
         useXIP = req.additionalSettings.get("useXIP", False)
         traefikNetwork = req.additionalSettings.get("traefikNetwork", "web")
         await createTraefikSSHConnection(token, req.deviceUUID, domainName, req.remotePort, traefikNetwork, useXIP, req.additionalLabels)
+    elif(req.forwarderType == "SSHSSLTRAEFIK"):
+        domainName = req.additionalSettings.get("domainName", None)
+        traefikNetwork = req.additionalSettings.get("traefikNetwork", "web")
+        await createTraefikSSHSSLConnection(token, req.deviceUUID, domainName, req.remotePort, traefikNetwork, req.additionalLabels)
     else:
         raise HTTPException(400, "Forwarder type not supported")
     return {"ip": publicIp, "req": req}
