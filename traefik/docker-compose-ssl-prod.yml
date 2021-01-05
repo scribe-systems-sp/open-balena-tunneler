@@ -31,6 +31,8 @@ services:
       - traefik.http.routers.api.rule=Host(`api.yourdomain.com`)
       - traefik.http.routers.api.tls=true
       - traefik.http.routers.api.tls.certresolver=letsencrypt
+    networks:
+      - web
 
 networks:
   web:
