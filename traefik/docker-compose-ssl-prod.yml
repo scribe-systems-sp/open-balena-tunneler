@@ -26,7 +26,7 @@ services:
     environment:
       - "BASEHREF=${OPENBALENAINSTANCE}"
       - "PUBLIC=${PUBLICIP}"
-      - "IMAGENAME=razikus/open-balena-dashboard:tunneler-latest"
+      - "IMAGENAME=razikus/open-balena-tunneler:tunneler-latest"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
