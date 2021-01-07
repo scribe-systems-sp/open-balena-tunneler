@@ -1,0 +1,4 @@
+export LOGIN=XX
+export PASSWORD=XX
+export TESTDEVICEUUID=XX
+export BASEHREF=XX

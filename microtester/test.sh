@@ -1,9 +1,6 @@
 export IMAGENAME=razikus/open-balena-tunneler:tunneler-latest
 export BIND=0.0.0.0
 export PUBLIC=127.0.0.1
-export BASEHREF=XXXX
 export SSLRESOLVER=letsencrypt
-export LOGIN=XXX
-export PASSWORD=XXXX
-export TESTDEVICEUUID=XXX
+source ./confidential.sh
 pytest -v
