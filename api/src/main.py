@@ -165,6 +165,8 @@ async def createTraefikSSLConnection(token, deviceUUID, domainName, port, traefi
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.rule": f"Host(`{domainName}`)",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls": "true",
         f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.tls.certresolver": sslCertResolver,
+        f"traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto": "https",
+        f"traefik.http.routers.{deviceUUID}{port}{shortUUID}.middlewares": "sslheader@docker",
         "traefik.enable": "true",
         "uuid": uuid4,
     }
