@@ -8,6 +8,7 @@ services:
       - "/certs/privkey.pem:/certs/server.key"
     ports:
       - 443:443
+    restart: always
   redis:
     image: redis
     restart: always
