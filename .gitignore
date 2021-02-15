@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 traefik/.env
 microtester/confidential.sh
+newTunnel/example
+
 __pycache__/
 *.py[cod]
 *$py.class

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  tunneler:
+    build:
+      context: .
+    volumes:
+      - "/certs/fullchain.pem:/certs/server.cert"
+      - "/certs/privkey.pem:/certs/server.key"
+    ports:
+      - 443:443
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - "redisonliner:/data"

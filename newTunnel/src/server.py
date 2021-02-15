@@ -3,15 +3,10 @@ import ssl
 import codecs
 import base64
 import logging
-
 from typing import Tuple
-
 from asyncio.streams import StreamReader, StreamWriter
-
 from urllib.parse import urlparse
-
 from redis_client import get_target_location
-
 from config import SERVER_CERT, SERVER_KEY, LISTEN_HOST, LISTEN_PORT
 
 server = None
@@ -40,7 +35,6 @@ async def handle_proxy(rec_reader: StreamReader,rec_writer: StreamWriter,target_
 
 async def connect_to_vpn(connect_key: str) -> Tuple[StreamReader, StreamWriter]:
     target = await get_target_location(connect_key)
-
     if target == None:
         logging.debug(f" [{connect_key}] target not found")
         return None
@@ -112,6 +106,7 @@ async def handle_connection(reader: StreamReader, writer: StreamWriter):
         host_header = part_headers[host_start: host_end]
         host = host_header.split(" ")[1]
         connect_key = host.split(".")[0]
+        print(connect_key)
     except Exception as e:
         logging.debug(f"New connection with invalid HOST data: " + str(e))
         writer.close()
